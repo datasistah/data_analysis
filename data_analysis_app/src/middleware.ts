@@ -2,6 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
 export async function middleware(req: NextRequest) {
+  // TEMPORARILY DISABLED FOR DEVELOPMENT - REMOVE THIS COMMENT WHEN RE-ENABLING AUTH
+  // Authentication is temporarily disabled to allow exploring the platform
+  return NextResponse.next();
+  
+  /* ORIGINAL AUTH CODE - COMMENTED OUT TEMPORARILY
   // Create a Supabase client configured to use cookies
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
@@ -33,6 +38,7 @@ export async function middleware(req: NextRequest) {
   }
 
   return NextResponse.next();
+  */
 }
 
 // Specify which routes this middleware should run on

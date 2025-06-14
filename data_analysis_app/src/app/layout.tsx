@@ -21,7 +21,8 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
       </head>
-      <body className="bg-gradient-to-br from-gray-950 to-gray-900 text-gray-100 antialiased font-inter min-h-screen">
+      {/* Suppress attribute warnings: data-new-gr-c-s-check-loaded, data-gr-ext-installed */}
+      <body suppressHydrationWarning className="bg-gradient-to-br from-gray-950 to-gray-900 text-gray-100 antialiased font-inter min-h-screen">
         <Providers>
           <div className="min-h-screen flex flex-col">
             <Navbar />

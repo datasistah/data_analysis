@@ -51,13 +51,25 @@ export default function Dashboard() {
   
   return (
     <div className="pt-20 pb-12">
+      {/* Demo Notice */}
+      <div className="bg-yellow-600/20 border border-yellow-500/50 text-yellow-100 px-4 py-3 mb-6">
+        <div className="container mx-auto flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span className="text-sm">
+            <strong>Demo Mode:</strong> Authentication is temporarily disabled. You can explore all features without signing in.
+          </span>
+        </div>
+      </div>
+      
       {/* Header Section with Welcome Message */}
       <div className="bg-gradient-to-r from-gray-900 to-blue-900 border-b border-gray-800">
         <div className="container mx-auto px-4 py-8">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
             <div>
               <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-blue-400">
-                Welcome Back, Alex
+                Welcome to the Demo Platform
               </h1>
               <p className="text-gray-300 mt-1">
                 Continue your learning journey and build your portfolio

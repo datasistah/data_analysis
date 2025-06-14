@@ -15,7 +15,7 @@ const CodeEditor = dynamic(
 
 interface SQLEditorProps {
   initialQuery?: string;
-  onRun?: (query: string) => void;
+  onRun?: (query: string, results?: any[], error?: string) => void;
   isLoading?: boolean;
   editorHeight?: string;
   suggestions?: boolean;
@@ -24,13 +24,15 @@ interface SQLEditorProps {
 export function SQLEditor({
   initialQuery = 'SELECT * FROM customers\nWHERE created_at > NOW() - INTERVAL \'30 days\'',
   onRun,
-  isLoading = false,
+  isLoading: externalIsLoading = false,
   editorHeight = 'h-64',
   suggestions = true,
 }: SQLEditorProps) {
   const [query, setQuery] = useState(initialQuery);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [activeSuggestion, setActiveSuggestion] = useState(0);
+  const [isLoading, setIsLoading] = useState(externalIsLoading);
+  const [queryError, setQueryError] = useState<string | null>(null);
 
   // Mock SQL suggestions
   const sqlSuggestions = [
@@ -81,8 +83,48 @@ export function SQLEditor({
     setShowSuggestions(false);
   };
   
-  const handleRun = () => {
-    if (onRun) onRun(query);
+  const executeQuery = async (sqlQuery: string) => {
+    try {
+      const response = await fetch('/api/query', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ query: sqlQuery }),
+      });
+      
+      const result = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(result.error || 'Failed to execute query');
+      }
+      
+      return { data: result.data, error: null };
+    } catch (err: any) {
+      return { data: null, error: err.message || 'An error occurred while executing the query' };
+    }
+  };
+
+  const handleRun = async () => {
+    setIsLoading(true);
+    setQueryError(null);
+    
+    try {
+      const { data, error } = await executeQuery(query);
+      
+      if (error) {
+        setQueryError(error);
+      }
+      
+      if (onRun) {
+        onRun(query, data, error);
+      }
+    } catch (error: any) {
+      setQueryError(error.message);
+      console.error('Error executing query:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -168,6 +210,11 @@ export function SQLEditor({
           Run Query
         </Button>
       </div>
+      {queryError && (
+        <div className="mt-2 text-red-500">
+          Error: {queryError}
+        </div>
+      )}
     </div>
   );
 }

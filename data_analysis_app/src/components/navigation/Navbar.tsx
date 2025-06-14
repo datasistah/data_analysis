@@ -12,7 +12,19 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   
-  const isAuthenticated = !!user;
+  // TEMPORARILY MOCK AUTHENTICATED STATE FOR DEVELOPMENT
+  const isAuthenticated = true; // Changed from !!user to always true for demo
+  
+  // Mock user data for demo mode
+  const mockUser = {
+    email: 'demo@example.com',
+    user_metadata: {
+      full_name: 'Demo User'
+    }
+  };
+  
+  // Use real user data if available, otherwise use mock data
+  const displayUser = user || mockUser;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -104,9 +116,9 @@ export default function Navbar() {
                   className="flex items-center space-x-2 p-1 rounded-full bg-gray-800 border border-gray-700 hover:bg-gray-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <div className="h-8 w-8 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center">
-                    <span className="font-medium text-white">{user.email?.[0].toUpperCase()}</span>
+                    <span className="font-medium text-white">{displayUser.email?.[0].toUpperCase()}</span>
                   </div>
-                  <span className="text-sm font-medium text-gray-200 pr-2">{user.user_metadata?.full_name || user.email}</span>
+                  <span className="text-sm font-medium text-gray-200 pr-2">{displayUser.user_metadata?.full_name || displayUser.email}</span>
                 </button>
                 
                 {isUserMenuOpen && (
@@ -148,6 +160,12 @@ export default function Navbar() {
                     <button 
                       className="flex items-center w-full text-left px-4 py-2 text-sm text-gray-200 hover:bg-gray-700"
                       onClick={async () => {
+                        // In demo mode, just close the menu and show an alert
+                        if (!user) {
+                          alert('Demo Mode: Sign out functionality is disabled');
+                          setIsUserMenuOpen(false);
+                          return;
+                        }
                         await signOut();
                         setIsUserMenuOpen(false);
                       }}
